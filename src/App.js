@@ -4,17 +4,28 @@ import Playercard from './Playercard';
 class Game extends Component {
   constructor(){
     super();
+
       this.signs = ["scissors", "rock", "paper"];
       this.state = {
         playerOne: "rock",
         playerTwo: "scissors",
+        singlePlayer: false,
+        count: 0,
 }
   }
   playGame = () => {
+    if(this.state.singlePlayer === false){
     this.setState({
       playerOne: this.signs[Math.floor(Math.random() * 3)],
       playerTwo: this.signs[Math.floor(Math.random() * 3)],
     })
+  }else{
+    this.setState({
+    playerOne: this.state.playerOne,
+    playerTwo: this.signs[Math.floor(Math.random() * 3)],
+  })
+
+  }
 
   }
   decideWinner = () => {
@@ -32,6 +43,7 @@ class Game extends Component {
       return "Player 2 wins !!!";}
     }
 images = () => {
+
   switch(this.state.playerOne){
     case "scissors":
   return "https://i.imgur.com/pgjyhIZ.png";
@@ -56,15 +68,42 @@ images2 = () => {
   return "https://i.imgur.com/2gsdqvR.png";
 }
 }
+gameMode = () => {
+
+  if (this.state.singlePlayer === false){
+  this.setState({
+    singlePlayer: true,
+  })
+}else{
+  this.setState({
+    singlePlayer: false,
+  })
+}
+console.log(this.state.singlePlayer);
+}
+count = () => {
+  this.setState({
+    count: this.state.count + 1,
+    playerOne: this.signs[this.state.count],
+  })
+  if(this.state.count === 2){
+    this.setState({
+      count: 0,
+    })
+  }
+  console.log(this.state.playerOne);
+}
 
   render(){
     return (
       <div className="container">
       <div>
-      <Playercard sign={this.images()} />
+      <Playercard  sign={this.images()}  />
+      <button id = "cyw" onClick={this.count}>Choose your weapon</button>
       <Playercard sign={this.images2()}/>
       </div>
       <div className="Winner">{this.decideWinner()}</div>
+      <button onClick = {this.gameMode}>Game mode: <div className= "hr">{this.state.singlePlayer ? "Single Player": "Player vs Player"}</div> Click to change</button>
       <button onClick = {this.playGame}>Play the Game</button>
       </div>
     )
